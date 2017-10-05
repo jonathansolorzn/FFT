@@ -20,13 +20,10 @@ public class Grabacion extends JFrame{
                 System.out.println("Grabando durante 10s...");
                 Thread.sleep(10000);
                 targetDataLine.close();
-                WaveFile grabacion = new WaveFile(file);
+                WAV grabacion = new WAV(file);
 
-                System.out.println("# Of Samples:"+grabacion.getSampleSize());
-
-
-                new DSP(grabacion.getUnscaledAmplitude(), grabacion.getFreciencias());
-                this.hide();
+                new DSP(grabacion.getAmplitud(), grabacion.getFreciencias());
+                this.dispose();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -39,8 +36,9 @@ public class Grabacion extends JFrame{
         JFrame frame = new JFrame("Grabacion");
         frame.setContentPane(new Grabacion().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600,480);
+        frame.setSize(300,250);
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 

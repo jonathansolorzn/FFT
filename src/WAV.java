@@ -2,51 +2,43 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import static java.nio.ByteBuffer.*;
 
 /**
  * https://stackoverflow.com/a/39425678/3809894
  */
 
-public class WaveFile {
-    private final int NOT_SPECIFIED = AudioSystem.NOT_SPECIFIED; // -1
-
-    private int sampleSize = NOT_SPECIFIED;
-    private long framesCount = NOT_SPECIFIED;
+public class WAV {
     private byte[] data;      // wav bytes
-    private AudioFormat audioFormat;
     private Clip clip;
-    private boolean canPlay;
+    private boolean puedeSonar;
 
-    public WaveFile(File file) throws UnsupportedAudioFileException, IOException {
+    WAV(File file) throws UnsupportedAudioFileException, IOException {
+
         if (!file.exists()) throw new FileNotFoundException(file.getAbsolutePath());
 
-        AudioInputStream ais = AudioSystem.getAudioInputStream(file);
-        audioFormat = ais.getFormat();
-        framesCount = ais.getFrameLength();
-        sampleSize = audioFormat.getSampleSizeInBits() / 8;
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+        long framesCount = audioInputStream.getFrameLength();
+
+        AudioFormat audioFormat = audioInputStream.getFormat();
 
         long dataLength = framesCount * audioFormat.getSampleSizeInBits() * audioFormat.getChannels() / 8;
         data = new byte[(int) dataLength];
-        ais.read(data);
+        audioInputStream.read(data);
 
-        AudioInputStream aisForPlay = AudioSystem.getAudioInputStream(file);
+        AudioInputStream audioInputStreamForPlay = AudioSystem.getAudioInputStream(file);
         try {
             clip = AudioSystem.getClip();
-            clip.open(aisForPlay);
+            clip.open(audioInputStreamForPlay);
             clip.setFramePosition(0);
-            canPlay = true;
+            puedeSonar = true;
         } catch (LineUnavailableException e) {
-            canPlay = false;
+            puedeSonar = false;
             System.out.println("I can play only 8bit and 16bit music.");
         }
     }
 
-    public boolean isCanPlay() {
-        return canPlay;
+    public boolean puedeSonar() {
+        return puedeSonar;
     }
 
     public void play() {
@@ -58,17 +50,16 @@ public class WaveFile {
     }
 
 
-    public int getSampleSize() {
-        return sampleSize;
-    }
-
-
-    public Datos getUnscaledAmplitude() {
+    /**
+     * Amplitud sin escala
+     * @return
+     */
+    DatosXY getAmplitud() {
         double[] x = new double[data.length / 2];
         double[] y = new double[data.length / 2];
 
         for (int audioByte = 0, i = 0; audioByte < data.length; i++) {
-            // Do the byte to sample conversion.
+            // Conversion de byte a sample
             double low = (double) data[audioByte];
             audioByte++;
             double high = (double) data[audioByte];
@@ -79,16 +70,20 @@ public class WaveFile {
             y[i] = sample;
         }
 
-        return new Datos(x, y);
+        return new DatosXY(x, y);
     }
 
-    public Datos getFreciencias() {
+    /**
+     * Dominio de frecuencias usando FFT
+     * @return
+     */
+    DatosXY getFreciencias() {
 
-        int length = potenciaDe2Anterior(data.length);
+        int dominio = potenciaDe2Anterior(data.length);
 
-        Komplex[] in = new Komplex[length];
-        for (int i = 0; i < length; i++) in[i] = new Komplex(data[i], 0);
-        Komplex[] out = TRF.trf(in);
+        Complex[] in = new Complex[dominio];
+        for (int i = 0; i < dominio; i++) in[i] = new Complex(data[i], 0);
+        Complex[] out = FFT.fft(in);
 
         double[] x = new double[out.length];
         double[] y = new double[out.length];
@@ -98,12 +93,14 @@ public class WaveFile {
             y[i] = out[i].magnitud();
         }
 
-        return new Datos(x, y);
+        FFT.show(in,"Entrada");
+        FFT.show(out,"Salida");
+
+        return new DatosXY(x, y);
     }
 
     private int potenciaDe2Anterior(int x) {
-        if (x == 0)
-            return 0;
+        if (x == 0) return 0;
 
         x--;
         x |= (x >> 1);

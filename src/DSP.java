@@ -1,22 +1,60 @@
 import org.knowm.xchart.*;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.markers.Marker;
+import org.knowm.xchart.style.markers.SeriesMarkers;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DSP extends JFrame {
+class DSP {
 
-    DSP(Datos amplitud, Datos frecuencias) {
+    DSP(DatosXY amplitud, DatosXY frecuencias) {
 
-        List<XYChart> graficas = new ArrayList<>();
+        final XYChart graficoAmplitud = new XYChartBuilder()
+                .width(480).height(320)
+                .title("Forma de Onda (no escalada)")
+                .xAxisTitle("tiempo").yAxisTitle("amplitud").build();
 
-        //Amplitud
-        XYChart gAmplitud = QuickChart.getChart("Amplitud", "X", "Y", "y(x)", amplitud.x, amplitud.y);
-        XYChart gFrecuencia = QuickChart.getChart("Freciencias", "X", "Y", "y(x)", frecuencias.x, frecuencias.y);
+        graficoAmplitud.getStyler().setLegendPosition(Styler.LegendPosition.InsideN);
+        XYSeries serie = graficoAmplitud.addSeries("a(t)", amplitud.x, amplitud.y);
+        serie.setMarker(SeriesMarkers.NONE);
 
-        graficas.add(gAmplitud);
-        graficas.add(gFrecuencia);
 
-        new SwingWrapper<>(graficas).displayChartMatrix();
+
+        final XYChart graficoFrecuencias = new XYChartBuilder()
+                .width(480).height(320)
+                .title("Frecuencias")
+                .xAxisTitle("frecuencia").yAxisTitle("dB").build();
+
+        graficoFrecuencias.getStyler().setLegendPosition(Styler.LegendPosition.InsideN);
+        serie = graficoFrecuencias.addSeries("f(t)", frecuencias.x, frecuencias.y);
+        serie.setMarker(SeriesMarkers.NONE);
+
+        // Programe un trabajo para el hilo de envío de eventos:
+        // Crear y mostrar la GUI de esta aplicación.
+        javax.swing.SwingUtilities.invokeLater(() -> {
+
+            // Crear el formulario.
+            JFrame frame = new JFrame("Procesamiento de Senales Digitales (FFT)");
+            frame.setLayout(new BorderLayout());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            // Amplitud
+            JPanel panelAmplitud = new XChartPanel<>(graficoAmplitud);
+            frame.add(panelAmplitud, BorderLayout.BEFORE_FIRST_LINE);
+
+            // Frecuencia
+            JPanel panelFrecuencia = new XChartPanel<>(graficoFrecuencias);
+            frame.add(panelFrecuencia, BorderLayout.AFTER_LAST_LINE);
+
+            // Mostrar formulario.
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+
     }
 
 }
