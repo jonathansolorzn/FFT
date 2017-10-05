@@ -36,6 +36,10 @@ public class Komplex {
         return new Komplex(real, -im);
     }
 
+    public double magnitud(){
+        return Math.sqrt(Math.pow(this.real, 2) + Math.pow(this.im, 2));
+    }
+
     @Override
     public String toString() {
         return String.format("(%f,%f)", real, im);

@@ -2,7 +2,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
 
-public class Grabacion {
+public class Grabacion extends JFrame{
     private JButton grabarButton;
     private JPanel mainPanel;
 
@@ -20,16 +20,26 @@ public class Grabacion {
                 System.out.println("Grabando durante 10s...");
                 Thread.sleep(10000);
                 targetDataLine.close();
+                WaveFile grabacion = new WaveFile(file);
+
+                System.out.println("# Of Samples:"+grabacion.getSampleSize());
+
+
+                new DSP(grabacion.getUnscaledAmplitude(), grabacion.getFreciencias());
+                this.hide();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         });
     }
 
+
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Grabacion");
         frame.setContentPane(new Grabacion().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600,480);
         frame.pack();
         frame.setVisible(true);
     }

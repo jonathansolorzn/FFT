@@ -4,30 +4,30 @@
 
 public class TRF {
     // compute the FFT of x[], assuming its length is a power of 2
-    static Komplex[] fft(Komplex[] x) {
+    public static Komplex[] trf(Komplex[] x) {
         int N = x.length;
 
         // base case
         if (N == 1) return new Komplex[]{x[0]};
 
         // radix 2 Cooley-Tukey FFT
-        if (N % 2 != 0) {
+        if (N%2 != 0) {
             throw new RuntimeException("N no es potencia de 2");
         }
 
-        // fft of even terms
+        // trf of even terms
         Komplex[] even = new Komplex[N / 2];
         for (int k = 0; k < N / 2; k++) {
             even[k] = x[2 * k];
         }
-        Komplex[] q = fft(even);
+        Komplex[] q = trf(even);
 
-        // fft of odd terms
+        // trf of odd terms
         Komplex[] odd = even;  // reuse the array
         for (int k = 0; k < N / 2; k++) {
             odd[k] = x[2 * k + 1];
         }
-        Komplex[] r = fft(odd);
+        Komplex[] r = trf(odd);
 
         // combine
         Komplex[] y = new Komplex[N];
@@ -42,7 +42,7 @@ public class TRF {
 
 
     // compute the inverse FFT of x[], assuming its length is a power of 2
-    static Komplex[] ifft(Komplex[] x) {
+    public static Komplex[] itrf(Komplex[] x) {
         int N = x.length;
         Komplex[] y = new Komplex[N];
 
@@ -52,7 +52,7 @@ public class TRF {
         }
 
         // compute forward FFT
-        y = fft(y);
+        y = trf(y);
 
         // take conjugate again
         for (int i = 0; i < N; i++) {
@@ -69,7 +69,7 @@ public class TRF {
     }
 
     // compute the circular convolution of x and y
-    static Komplex[] cconvolve(Komplex[] x, Komplex[] y) {
+    public static Komplex[] cconvolve(Komplex[] x, Komplex[] y) {
 
         // should probably pad x and y with 0s so that they have same length
         // and are powers of 2
@@ -80,8 +80,8 @@ public class TRF {
         int N = x.length;
 
         // compute FFT of each sequence
-        Komplex[] a = fft(x);
-        Komplex[] b = fft(y);
+        Komplex[] a = trf(x);
+        Komplex[] b = trf(y);
 
         // point-wise multiply
         Komplex[] c = new Komplex[N];
@@ -90,7 +90,7 @@ public class TRF {
         }
 
         // compute inverse FFT
-        return ifft(c);
+        return itrf(c);
     }
 
 
