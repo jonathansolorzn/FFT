@@ -2,6 +2,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import Lista.Lista;
 
 /**
  * https://stackoverflow.com/a/39425678/3809894
@@ -54,9 +55,9 @@ public class WAV {
      * Amplitud sin escala
      * @return
      */
-    DatosXY getAmplitud() {
-        double[] x = new double[data.length / 2];
-        double[] y = new double[data.length / 2];
+    Lista getAmplitud() {
+
+        Lista datos = new Lista();
 
         for (int audioByte = 0, i = 0; audioByte < data.length; i++) {
             // Conversion de byte a sample
@@ -66,37 +67,40 @@ public class WAV {
             audioByte++;
             double sample = (double) ((int) high << 8) + ((int) low & 0x00ff);
 
-            x[i] = i + 1;
-            y[i] = sample;
+            double xi = i + 1;
+            double yi = sample;
+
+            datos.insertarFin(xi, yi);
         }
 
-        return new DatosXY(x, y);
+        return datos;
     }
 
     /**
      * Dominio de frecuencias usando FFT
      * @return
      */
-    DatosXY getFreciencias() {
+    Lista getFreciencias() {
 
+        Lista datos = new Lista();
         int dominio = potenciaDe2Anterior(data.length);
 
         Complex[] in = new Complex[dominio];
         for (int i = 0; i < dominio; i++) in[i] = new Complex(data[i], 0);
         Complex[] out = FFT.fft(in);
 
-        double[] x = new double[out.length];
-        double[] y = new double[out.length];
-
         for (int i = 0; i < out.length; i++) {
-            x[i] = (double) i;
-            y[i] = out[i].magnitud();
+
+            double xi = (double) i;
+            double yi = out[i].magnitud();
+
+            datos.insertarFin(xi, yi);
         }
 
-        FFT.show(in,"Entrada");
-        FFT.show(out,"Salida");
+//        FFT.show(in,"Entrada");
+//        FFT.show(out,"Salida");
 
-        return new DatosXY(x, y);
+        return datos;
     }
 
     private int potenciaDe2Anterior(int x) {

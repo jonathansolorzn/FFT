@@ -1,5 +1,7 @@
 import javax.sound.sampled.*;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 public class Grabacion extends JFrame{
@@ -14,16 +16,18 @@ public class Grabacion extends JFrame{
     private Grabacion() {
         grabarButton.addActionListener(e -> {
             try {
-                DataLine.Info dLI = new DataLine.Info(TargetDataLine.class,audioFormat);
+                DataLine.Info dLI = new DataLine.Info(TargetDataLine.class, audioFormat);
                 targetDataLine = (TargetDataLine) AudioSystem.getLine(dLI);
                 new CapThread().start();
                 System.out.println("Grabando durante 10s...");
                 Thread.sleep(10000);
                 targetDataLine.close();
-                WAV grabacion = new WAV(file);
 
+                WAV grabacion = new WAV(file);
                 new DSP(grabacion.getAmplitud(), grabacion.getFreciencias());
-                this.dispose();
+
+                Grabacion.this.dispose();
+
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

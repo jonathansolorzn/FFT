@@ -24,14 +24,6 @@ public class Complex {
         return new Complex(r, i);
     }
 
-    Complex por(double d) {
-        return new Complex(real * d, imaginario * d);
-    }
-
-    Complex conjugado() {
-        return new Complex(real, -imaginario);
-    }
-
     double magnitud(){
         return Math.sqrt(Math.pow(this.real, 2) + Math.pow(this.imaginario, 2));
     }

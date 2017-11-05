@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FFT:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FFT_jar</output-path>
+    <root id="archive" name="FFT.jar">
+      <element id="module-output" name="FFT" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/knowm/xchart/xchart/3.5.0/xchart-3.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/de/erichseifert/vectorgraphics2d/VectorGraphics2D/0.11/VectorGraphics2D-0.11.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
