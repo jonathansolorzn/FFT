@@ -13,6 +13,7 @@ public class Lista {
         fin = null;
     }
 
+    // Metodo para insertar un nodo al final de una lista
     public void insertarFin(double x, double y) {
         Nodo nuevo = new Nodo(x, y, null);
 
@@ -25,19 +26,7 @@ public class Lista {
         }
     }
 
-    public double[] extraerInicio() {
-        double x = inicio.getX();
-        double y = inicio.getY();
-
-        inicio = inicio.getSiguiente();
-        if (inicio == null){
-            fin = null;
-            return null;
-        }
-
-        return new double[]{x, y};
-    }
-
+    // Metodo para listar el contenido de los nodos
     public List<List<Double>> listar(){
 
         Nodo temp = inicio;

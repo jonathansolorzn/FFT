@@ -6,11 +6,15 @@ public class Nodo {
     private double y;
     Nodo siguiente;
 
+    // Constructor
+
     public Nodo(double x, double y, Nodo siguiente) {
         this.x = x;
         this.y = y;
         this.siguiente = siguiente;
     }
+
+    // Getters y Setters
 
     public double getX() {
         return x;

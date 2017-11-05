@@ -1,7 +1,5 @@
 import javax.sound.sampled.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class Grabacion extends JFrame{

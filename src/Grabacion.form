@@ -12,7 +12,7 @@
       <component id="57bc2" class="javax.swing.JButton" binding="grabarButton" default-binding="true">
         <constraints border-constraint="Center"/>
         <properties>
-          <text value="Grabar"/>
+          <text value="Click Para Grabar Durante 10 Segundos..."/>
         </properties>
       </component>
     </children>

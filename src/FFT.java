@@ -44,14 +44,4 @@ class FFT {
         }
         return y;
     }
-
-    // display an array of Complex numbers to standard output
-    static void show(Complex[] x, String title) {
-        System.out.println(title);
-        System.out.println("-------------------");
-        for (Complex aX : x) {
-            System.out.println(aX);
-        }
-        System.out.println();
-    }
 }

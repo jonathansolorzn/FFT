@@ -97,9 +97,6 @@ public class WAV {
             datos.insertarFin(xi, yi);
         }
 
-//        FFT.show(in,"Entrada");
-//        FFT.show(out,"Salida");
-
         return datos;
     }
 
